@@ -1,5 +1,5 @@
 # encoding:utf-8
-from app import app, mq
+from app import app, rabbitmq
 
 if __name__ == '__main__':
-    mq.run_with_flask_app()
+    rabbitmq.run_with_flask_app()

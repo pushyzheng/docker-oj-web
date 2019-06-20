@@ -10,6 +10,6 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 
 queue = Queue()
-mq = RabbitMQ(app, queue)
+rabbitmq = RabbitMQ(app, queue)
 
-from app import views, models, judger
+from app import views, models, mq
