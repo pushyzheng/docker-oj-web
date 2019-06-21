@@ -2,6 +2,7 @@
 import json
 import copy
 
+
 class JsonSerializableMixin(object):
 
     def to_json_string(self):
@@ -25,10 +26,9 @@ class ModelParent(object):
 
         return res
 
+    def from_dict(self, data):
+        for key in data.keys():
+            setattr(self, key, data[key])
+
     def __str__(self):
         return str(self.__dict__)
-
-from .judgement import *
-from .problem import *
-from .submission import *
-from .user import *

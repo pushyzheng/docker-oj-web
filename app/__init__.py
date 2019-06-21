@@ -15,4 +15,10 @@ rabbitmq = RabbitMQ(app, queue)
 
 CORS(app)
 
-from app import views, models, mq
+from app import mq
+from app import problem
+from app import judgement
+from app import submission
+from app import user
+
+from app import error_handler

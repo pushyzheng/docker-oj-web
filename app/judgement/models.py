@@ -1,6 +1,5 @@
 # encoding:utf-8
-from app.models import JsonSerializableMixin
-
+from utils import JsonSerializableMixin
 
 class JudgementTask(JsonSerializableMixin):
     def __init__(self, task_id=None, problem_id=None, user_id=None, language=None, time_limit=None, memory_limit=None):

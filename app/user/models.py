@@ -1,6 +1,6 @@
 # encoding:utf-8
 from app import db
-from app.models import ModelParent
+from utils import ModelParent
 from datetime import datetime
 
 

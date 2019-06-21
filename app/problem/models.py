@@ -1,7 +1,7 @@
 # encoding:utf-8
 from app import db
 from datetime import datetime
-from app.models import ModelParent
+from utils import ModelParent
 
 
 class Problem(db.Model, ModelParent):

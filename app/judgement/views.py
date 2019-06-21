@@ -1,19 +1,32 @@
 # encoding:utf-8
 from app import app, rabbitmq, db
-from app.models import Problem, Submission, JudgementTask
-from app.utils import get_uuid
+from app.problem.models import Problem
+from app.submission.models import Submission
+from app.judgement.models import JudgementTask
+from utils import get_uuid, logger
 import os
-from flask import request, jsonify
+from flask import jsonify, g
+from flask_expects_json import expects_json
 
+schema = {
+    'type': 'object',
+    'properties': {
+        'code': {'type': 'string'},
+        'user_id': {'type': 'string'},
+        'language': {'type': 'string'},
+        'problem_id': {'type': 'integer'}
+    },
+    'required': ['code', 'user_id', 'language', 'problem_id']
+}
 
 @app.route('/judge', methods=['POST'])
+@expects_json(schema)
 def judge():
-    code = request.json.get('code')
-    user_id = request.json.get('user_id')
-    language = request.json.get('language')
-    problem_id = request.json.get('problem_id')
-    if problem_id:
-        problem_id = int(problem_id)
+    data = g.data
+    code = data['code']
+    user_id = data['user_id']
+    language = data['language']
+    problem_id = data['problem_id']
 
     problem = Problem.query.filter_by(id=problem_id).first()
     if not problem:
@@ -47,6 +60,7 @@ def judge():
     db.session.add(submission)
     db.session.commit()
 
+    logger.info("Send task => {}".format(task))
     rabbitmq.send(body=task.to_json_string(), exchange='', key='go-docker-judger')
 
     return jsonify(data=resp), 202

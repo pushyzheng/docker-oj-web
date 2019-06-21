@@ -1,6 +1,6 @@
 # encoding:utf-8
 from app import app, db
-from app.models import Submission
+from app.submission.models import Submission
 
 from flask import jsonify
 from sqlalchemy import desc
