@@ -42,12 +42,15 @@ class JudgementStatus:
 class Submission(ModelParent, db.Model):
     __tablename__ = 'submissions'
 
-    id = db.Column(db.String(32), primary_key=True, nullable=True)
-    user_id = db.Column(db.String(32), db.ForeignKey("users.id"), nullable=True)
-    problem_id = db.Column(db.String(32), db.ForeignKey("problems.id"), nullable=True)
-    language = db.Column(db.String(10), nullable=True)
+    id = db.Column(db.String(32), primary_key=True)
+    user_id = db.Column(db.String(32), db.ForeignKey("users.id"))
+    problem_id = db.Column(db.Integer, db.ForeignKey("problems.id"))
+    code = db.Column(db.Text, nullable=True)
+    language = db.Column(db.String(10))
 
     result = db.Column(db.Integer, default=JudgementStatus.PENDING)
-    error_info = db.Column(db.Text)
+    runtime_time = db.Column(db.Float)
+    runtime_memory = db.Column(db.Integer)
+    error_info = db.Column(db.Text, nullable=True)
 
     timestamp = db.Column(db.DateTime, default=datetime.now)

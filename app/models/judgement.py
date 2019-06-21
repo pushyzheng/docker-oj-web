@@ -3,11 +3,13 @@ from app.models import JsonSerializableMixin
 
 
 class JudgementTask(JsonSerializableMixin):
-    def __init__(self, task_id=None, problem_id=None, user_id=None, language=None):
+    def __init__(self, task_id=None, problem_id=None, user_id=None, language=None, time_limit=None, memory_limit=None):
         self.id = task_id
         self.problem_id = problem_id
         self.user_id = user_id
         self.language = language
+        self.time_limit = time_limit
+        self.memory_limit = memory_limit
 
 
 class JudgementResult(JsonSerializableMixin):

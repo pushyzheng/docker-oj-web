@@ -1,6 +1,6 @@
 # encoding:utf-8
 import json
-
+import copy
 
 class JsonSerializableMixin(object):
 
@@ -20,7 +20,7 @@ class JsonSerializableMixin(object):
 
 class ModelParent(object):
     def to_dict(self):
-        res = self.__dict__
+        res = copy.copy(self.__dict__)
         res.pop('_sa_instance_state')
 
         return res
