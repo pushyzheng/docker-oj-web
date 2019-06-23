@@ -50,7 +50,12 @@ class Submission(ModelParent, db.Model):
 
     result = db.Column(db.Integer, default=JudgementStatus.PENDING)
     runtime_time = db.Column(db.Float)
-    runtime_memory = db.Column(db.Integer)
+    runtime_memory = db.Column(db.Integer, nullable=True)
+    last_input = db.Column(db.String(255), nullable=True)
+    last_output = db.Column(db.String(255), nullable=True)
+    expected_output = db.Column(db.String(255), nullable=True)
     error_info = db.Column(db.Text, nullable=True)
+
+    case_passing_rate = db.Column(db.Float, nullable=True)
 
     timestamp = db.Column(db.DateTime, default=datetime.now)

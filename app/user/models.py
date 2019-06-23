@@ -12,5 +12,5 @@ class User(db.Model, ModelParent):
     password = db.Column(db.String(32))
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
-    submissions = db.relationship('Submission', backref='user', lazy='dynamic')
+    # submissions = db.relationship('Submission', backref='user', lazy='dynamic')
     problems = db.relationship('Problem', backref='user', lazy='dynamic')

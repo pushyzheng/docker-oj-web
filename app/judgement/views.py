@@ -19,6 +19,7 @@ schema = {
     'required': ['code', 'user_id', 'language', 'problem_id']
 }
 
+
 @app.route('/judge', methods=['POST'])
 @expects_json(schema)
 def judge():

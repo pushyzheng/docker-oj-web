@@ -13,7 +13,10 @@ DATABASE = 'go-docker-oj'
 SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(DIALECT, DRIVER, USERNAME, PASSWORD, HOST, PORT,
                                                                        DATABASE)
 
-
 RABBITMQ_HOST = 'localhost'
 RABBITMQ_USERNAME = 'guest'
 RABBITMQ_PASSWORD = 'guest'
+
+CODE_PATH = 'e:/usr/pushy'
+CASE_PATH = 'e:/usr/cases'
+ANSWER_PATH = 'e:/usr/answers'
