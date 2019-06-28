@@ -7,6 +7,7 @@ save_problem_schema = {
         'content': {'type': 'string'},
         'time_limit': {'type': 'integer'},
         'memory_limit': {'type': 'integer'},
+        'difficulty' : {'type': 'string'},
         'case_list': {'type': 'array'},
         'answer_list': {'type': 'array'}
     },
@@ -20,8 +21,7 @@ update_problem_schema = {
         'content': {'type': 'string'},
         'time_limit': {'type': 'integer'},
         'memory_limit': {'type': 'integer'}
-    },
-    'required': []
+    }
 }
 
 update_cases_answers_schema = {

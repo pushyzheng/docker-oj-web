@@ -10,7 +10,7 @@ def error_400(error):
         code=400,
         data=None,
         message=str(error)
-    )
+    ), 400
 
 
 @app.errorhandler(404)
@@ -19,7 +19,7 @@ def error_404(error):
         code=404,
         data=None,
         message=str(error)
-    )
+    ), 404
 
 
 @app.errorhandler(403)
@@ -28,7 +28,7 @@ def error_403(error):
         code=403,
         data=None,
         message=str(error)
-    )
+    ), 403
 
 
 @app.errorhandler(401)
@@ -37,7 +37,7 @@ def error_401(error):
         code=401,
         data=None,
         message=str(error)
-    )
+    ), 401
 
 
 @app.errorhandler(500)
@@ -47,4 +47,4 @@ def error_500(error):
         code=500,
         data=None,
         message='The server encountered an internal error and was unable to complete your request'
-    )
+    ), 500

@@ -1,0 +1,5 @@
+flask
+flask-rabbitmq
+flask-sqlalchemy
+flask-cors
+flask_expects_json

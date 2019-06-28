@@ -20,5 +20,9 @@ from app import problem
 from app import judgement
 from app import submission
 from app import user
+from app import auth
+from app import others
+
+from app.common import user
 
 from app import error_handler

@@ -1,7 +1,9 @@
 # encoding:utf-8
 from app import app, db
 from app.problem.models import Problem
-from utils import logger
+from utils import logger, success
+from app.auth.main import auth
+from app.common.models import RoleName
 from schemas.problem import *
 import os
 from flask import jsonify, g, abort
@@ -12,6 +14,7 @@ import requests
 
 @app.route('/admin/problems', methods=['POST'])
 @expects_json(save_problem_schema)
+# @auth(role=RoleName.ADMIN)
 def save_problem():
     case_list, answer_list = g.data['case_list'], g.data['answer_list']
     if len(case_list) != len(answer_list):
@@ -36,7 +39,22 @@ def save_problem():
     return jsonify(data=resp)
 
 
+@app.route('/admin/problems/<id>', methods=['GET'])
+# @auth(role=RoleName.ADMIN)
+def admin_get_problem(id):
+    problem = Problem.query.filter_by(id=id).first()
+
+    input_case_list = get_problem_cases(id)
+    output_case_list = get_problem_answer(id)
+
+    setattr(problem, 'input_case_list', input_case_list)
+    setattr(problem, 'output_case_list', output_case_list)
+
+    return success(problem.to_dict())
+
+
 @app.route('/admin/problems/<id>', methods=['PUT'])
+# @auth(role=RoleName.ADMIN)
 @expects_json(update_problem_schema)
 def update_problem(id):
     problem = valid_exists_problem(id)
@@ -55,7 +73,22 @@ def update_problem(id):
     return jsonify(data=resp)
 
 
-@app.route('/admin/problems/<id>/cases', methods=['GET'])
+@app.route('/admin/problems/<id>/cases-and-answers', methods=['PUT'])
+# @auth(role=RoleName.ADMIN)
+@expects_json(update_cases_answers_schema)
+def update_problem_answers(id):
+    valid_exists_problem(id)
+
+    case_list, answer_list = g.data['case_list'], g.data['answer_list']
+    # if len(case_list) != len(answer_list):
+    #     abort(400, 'case list length must equals answer list length')
+
+    # 写入测试样例文件和答案文件中
+    write_case_and_answer_to_file(id, case_list, answer_list)
+
+    return jsonify(data=None)
+
+
 def get_problem_cases(id):
     valid_exists_problem(id)
 
@@ -69,10 +102,9 @@ def get_problem_cases(id):
         for line in lines:
             case_list.append(line.replace("\n", ""))
 
-    return jsonify(data=case_list)
+    return case_list
 
 
-@app.route('/admin/problems/<id>/answers', methods=['GET'])
 def get_problem_answer(id):
     valid_exists_problem(id)
 
@@ -86,23 +118,7 @@ def get_problem_answer(id):
         for line in lines:
             answer_list.append(line.replace("\n", ""))
 
-    return jsonify(data=answer_list)
-
-
-@app.route('/admin/problems/<id>/cases-and-answers', methods=['PUT'])
-@expects_json(update_cases_answers_schema)
-def update_problem_answers(id):
-    valid_exists_problem(id)
-
-    case_list, answer_list = g.data['case_list'], g.data['answer_list']
-    if len(case_list) != len(answer_list):
-        abort(400, 'case list length must equals answer list length')
-
-    # 写入测试样例文件和答案文件中
-    write_case_and_answer_to_file(id, case_list, answer_list)
-
-    return jsonify(data=None)
-
+    return answer_list
 
 def valid_exists_problem(id):
     problem = Problem.query.filter_by(id=id).first()
@@ -123,11 +139,11 @@ def write_case_and_answer_to_file(problem_id, case_list, answer_list):
     problem_case_path = '{}/case_{}.txt'.format(app.config['CASE_PATH'], problem_id)
     problem_answer_path = '{}/answer_{}.txt'.format(app.config['ANSWER_PATH'], problem_id)
 
-    with open(problem_case_path, 'a', encoding='utf-8') as f:
+    with open(problem_case_path, 'w', encoding='utf-8') as f:
         for case in case_list:
             f.write(case + '\n')
 
-    with open(problem_answer_path, 'a', encoding='utf-8') as f:
+    with open(problem_answer_path, 'w', encoding='utf-8') as f:
         for answer in answer_list:
             f.write(answer + '\n')
 

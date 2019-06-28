@@ -9,4 +9,5 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 from .main import *
+from .gravatar import *
 from .model import *

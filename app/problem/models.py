@@ -11,8 +11,11 @@ class Problem(db.Model, ModelParent):
     title = db.Column(db.String(32))
     content = db.Column(db.Text)
     content_html = db.Column(db.Text)
-    time_limit = db.Column(db.Integer)
-    memory_limit = db.Column(db.Integer)
+    time_limit = db.Column(db.Integer)  # 时间限制
+    memory_limit = db.Column(db.Integer)  # 内存限制
+
+    passing_rate = db.Column(db.Float)  # 通过率
+    difficulty = db.Column(db.String(10))  # 难度
 
     author = db.Column(db.String(32), db.ForeignKey("users.id"))
 

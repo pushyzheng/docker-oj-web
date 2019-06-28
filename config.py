@@ -1,7 +1,7 @@
 # encoding:utf-8
 import os
 
-SECRET_KEY = os.urandom(24)
+SECRET_KEY = "My secret key"
 
 DIALECT = 'mysql'
 DRIVER = 'pymysql'

@@ -13,7 +13,7 @@ def sort_and_distinct(data_list):
     return data_list
 
 
-def success(data):
+def success(data=None):
     resp = {
         'data': data,
         'message': None,

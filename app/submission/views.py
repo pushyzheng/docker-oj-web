@@ -1,12 +1,15 @@
 # encoding:utf-8
 from app import app
+from app.common.models import RoleName
 from app.submission.models import Submission, JudgementStatus
-from flask import abort
+from app.auth.main import auth
+from flask import abort, g
 from sqlalchemy import desc
 from utils import sort_and_distinct, success
 
 
 @app.route('/submissions/<id>', methods=['GET'])
+@auth(role=RoleName.USER)
 def submission(id):
     sub = Submission.query.filter_by(id=id).first()
     if not sub:
@@ -21,9 +24,9 @@ def submission(id):
 
 
 @app.route('/submissions/latest', methods=['GET'])
+@auth(role=RoleName.USER)
 def get_latest_submission():
-    user_id = 123
-    sub = Submission.query.filter_by(user_id=user_id).order_by(desc(Submission.timestamp)).first()
+    sub = Submission.query.filter_by(user_id=g.user.id).order_by(desc(Submission.timestamp)).first()
     if not sub:
         return success(None)
 

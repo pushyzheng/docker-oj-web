@@ -1,31 +1,34 @@
 # encoding:utf-8
 from app import app, rabbitmq, db
+from app.common.models import RoleName
 from app.problem.models import Problem
 from app.submission.models import Submission
 from app.judgement.models import JudgementTask
+from app.auth.main import auth
 from utils import get_uuid, logger
 import os
 from flask import jsonify, g
 from flask_expects_json import expects_json
 
-schema = {
+judge_schema = {
     'type': 'object',
     'properties': {
         'code': {'type': 'string'},
-        'user_id': {'type': 'string'},
         'language': {'type': 'string'},
         'problem_id': {'type': 'integer'}
     },
-    'required': ['code', 'user_id', 'language', 'problem_id']
+    'required': ['code', 'language', 'problem_id']
 }
 
 
 @app.route('/judge', methods=['POST'])
-@expects_json(schema)
+@auth(role=RoleName.USER)
+@expects_json(judge_schema)
 def judge():
+    user_id = g.user.id
+
     data = g.data
     code = data['code']
-    user_id = data['user_id']
     language = data['language']
     problem_id = data['problem_id']
 
@@ -74,5 +77,7 @@ def get_file_name(language):
         return 'main.c'
     if language == 'cpp':
         return 'main.cpp'
-    if language == 'py':
+    if language == 'python':
         return 'main.py'
+    if language == 'js':
+        return 'main.js'
