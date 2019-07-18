@@ -7,7 +7,8 @@ from app.judgement.models import JudgementTask
 from app.auth.main import auth
 from utils import get_uuid, logger
 import os
-from flask import jsonify, g
+import re
+from flask import jsonify, g, abort
 from flask_expects_json import expects_json
 
 judge_schema = {
@@ -35,6 +36,11 @@ def judge():
     problem = Problem.query.filter_by(id=problem_id).first()
     if not problem:
         return jsonify(data=None, message='The problem not found'), 404
+
+    if language == 'java':
+        err, info = valid_java_format(code)
+        if not err:
+            return jsonify(data=None, message=info), 400
 
     user_path = 'e:/usr/pushy/{}'.format(user_id)
 
@@ -81,3 +87,18 @@ def get_file_name(language):
         return 'main.py'
     if language == 'js':
         return 'main.js'
+
+
+def valid_java_format(code):
+    if code.find('package') != -1:
+        return False, '请删除包名信息 package xxx'
+
+    res = re.findall('public class (.*?)?{', code)
+    if len(res) == 0:
+        return False, '主类类名必须为 Main'
+
+    class_name = res[0].strip()
+    if class_name != 'Main':
+        return False, '主类类名必须为 Main'
+
+    return True
